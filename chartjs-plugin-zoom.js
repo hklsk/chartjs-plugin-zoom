@@ -194,7 +194,9 @@ function doZoom(chartInstance, zoom, center) {
 function panIndexScale(scale, delta, panOptions) {
 	var labels = scale.chart.data.labels;
 	var lastLabelIndex = labels.length - 1;
-	var offsetAmt = Math.max((scale.ticks.length - ((scale.options.gridLines.offsetGridLines) ? 0 : 1)), 1);
+	console.log(scale.options.gridLines.offsetGridLines)
+	// var offsetAmt = Math.max((scale.ticks.length - ((scale.options.gridLines.offsetGridLines) ? 0 : 1)), 1);
+	var offsetAmt = Math.max(scale.ticks.length, 1);
 	var panSpeed = panOptions.speed;
 	var minIndex = scale.minIndex;
 	var step = Math.round(scale.width / (offsetAmt * panSpeed));
@@ -241,6 +243,7 @@ function panScale(scale, delta, panOptions) {
 }
 
 function doPan(chartInstance, deltaX, deltaY) {
+	console.log('hh')
 	var panOptions = chartInstance.options.pan;
 	if (panOptions && helpers.getValueOrDefault(panOptions.enabled, defaultOptions.pan.enabled)) {
 		var panMode = helpers.getValueOrDefault(chartInstance.options.pan.mode, defaultOptions.pan.mode);
@@ -374,7 +377,7 @@ var zoomPlugin = {
 				}
 			};
 			node.addEventListener('mouseup', chartInstance.zoom._mouseUpHandler);
-		} else if (options.zoom.enabled) {
+		} else {
 			chartInstance.zoom._wheelHandler = function(event) {
 				var rect = event.target.getBoundingClientRect();
 				var offsetX = event.clientX - rect.left;
@@ -499,7 +502,7 @@ var zoomPlugin = {
 				node.removeEventListener('mousedown', chartInstance.zoom._mouseDownHandler);
 				node.removeEventListener('mousemove', chartInstance.zoom._mouseMoveHandler);
 				node.removeEventListener('mouseup', chartInstance.zoom._mouseUpHandler);
-			} else if (options.zoom.enabled) {
+			} else {
 				node.removeEventListener('wheel', chartInstance.zoom._wheelHandler);
 			}
 
