@@ -2,107 +2,108 @@
 <html>
 
 <head>
-	<title>Bar Chart Zoom</title>
-	<script src="../node_modules/chart.js/dist/Chart.bundle.js"></script>
-	<script src="../node_modules/hammerjs/hammer.min.js"></script>
-	<script src="../chartjs-plugin-zoom.js"></script>
+  <title>Bar Chart Zoom</title>
+  <script src="../node_modules/chart.js/dist/Chart.bundle.js"></script>
+  <script src="../node_modules/hammerjs/hammer.min.js"></script>
+  <script src="../chartjs-plugin-zoom.js"></script>
 
-	<style>
-	canvas {
-		-moz-user-select: none;
-		-webkit-user-select: none;
-		-ms-user-select: none;
-	}
-	</style>
+  <style>
+  canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+  </style>
 </head>
 
 <body>
-	<div id="container" style="width: 75%;">
-		<canvas id="canvas"></canvas>
-	</div>
+  <div id="container" style="width: 75%;">
+    <canvas id="canvas"></canvas>
+  </div>
 
-	<script>
-		var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  <script>
+    var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-		var randomScalingFactor = function() {
-			return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
-		};
-		var randomColorFactor = function() {
-			return Math.round(Math.random() * 255);
-		};
-		var randomColor = function() {
-			return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',.7)';
-		};
+    var randomScalingFactor = function() {
+      return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
+    };
+    var randomColorFactor = function() {
+      return Math.round(Math.random() * 255);
+    };
+    var randomColor = function() {
+      return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',.7)';
+    };
 
-		var barChartData = {
-			labels: ["January-16", "February-16", "March-16", "April-16", "May-16", "June-16", "July-16", "August-16", "September-16", "October-16", "November-16", "December-16", "January-17", "February-17", "March-17", "April-17", "May-17", "June-17", "July-17", "August-17", "September-17", "October-17", "November-17", "December-17"],
-			datasets: [{
-				label: 'Dataset 1',
-				backgroundColor: "rgba(220,220,220,0.5)",
-				data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
-			}, {
-				hidden: false,
-				label: 'Dataset 2',
-				backgroundColor: "rgba(255,187,205,1)",
-				data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
-			}, {
-				label: 'Dataset 3',
-				backgroundColor: "rgba(151,187,205,0.5)",
-				data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
-			}]
+    let labels = ["2017-11-07T10:06:31.004Z","2017-11-08T10:06:31.005Z","2017-11-09T10:06:31.005Z","2017-11-10T10:06:31.005Z","2017-11-11T10:06:31.005Z","2017-11-12T10:06:31.005Z","2017-11-13T10:06:31.005Z","2017-11-14T10:06:31.005Z","2017-11-15T10:06:31.005Z","2017-11-16T10:06:31.005Z","2017-11-17T10:06:31.005Z","2017-11-18T10:06:31.005Z","2017-11-19T10:06:31.005Z","2017-11-20T10:06:31.005Z","2017-11-21T10:06:31.005Z","2017-11-22T10:06:31.005Z","2017-11-23T10:06:31.005Z","2017-11-24T10:06:31.005Z","2017-11-25T10:06:31.005Z","2017-11-26T10:06:31.005Z","2017-11-27T10:06:31.005Z","2017-11-28T10:06:31.005Z","2017-11-29T10:06:31.005Z","2017-11-30T10:06:31.005Z","2017-12-01T10:06:31.005Z","2017-12-02T10:06:31.005Z","2017-12-03T10:06:31.005Z","2017-12-04T10:06:31.005Z","2017-12-05T10:06:31.005Z","2017-12-06T10:06:31.005Z","2017-12-07T10:06:31.005Z","2017-12-08T10:06:31.005Z","2017-12-09T10:06:31.005Z","2017-12-10T10:06:31.005Z","2017-12-11T10:06:31.005Z","2017-12-12T10:06:31.005Z","2017-12-13T10:06:31.005Z","2017-12-14T10:06:31.005Z","2017-12-15T10:06:31.005Z","2017-12-16T10:06:31.005Z","2017-12-17T10:06:31.006Z","2017-12-18T10:06:31.006Z","2017-12-19T10:06:31.006Z","2017-12-20T10:06:31.006Z","2017-12-21T10:06:31.006Z","2017-12-22T10:06:31.006Z","2017-12-23T10:06:31.006Z","2017-12-24T10:06:31.006Z","2017-12-25T10:06:31.006Z","2017-12-26T10:06:31.006Z"]
+    let datas = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,1,1,1,0,1,2,0,1,0,2,0,1,3,2,1,3,2,1,1,2,1,1,4,1,0,1,1,1,0]
 
-		};
+    var barChartData = {
+      labels: labels,
+      datasets: [{
+        label: 'Dataset 1',
+        backgroundColor: "rgba(220,220,220,0.5)",
+        data: datas
+      }]
+
+    };
 
 
 
-		window.onload = function() {
-			var ctx = document.getElementById("canvas").getContext("2d");
-			window.myBar = new Chart(ctx, {
-				type: 'bar',
-				data: barChartData,
-				options: {
-					// Elements options apply to all of the options unless overridden in a dataset
-					// In this case, we are setting the border of each bar to be 2px wide and green
-					elements: {
-						rectangle: {
-							borderWidth: 2,
-							borderColor: 'rgb(0, 255, 0)',
-							borderSkipped: 'bottom'
-						}
-					},
-					responsive: true,
-					legend: {
-						position: 'top',
-					},
-					title: {
-						display: true,
-						text: 'Chart.js Bar Chart'
-					},
-					pan: {
-						enabled: true,
-						mode: 'xy' // is panning about the y axis neccessary for bar charts?
-					},
-					zoom: {
-						enabled: true,
-						mode: 'x',
-						sensitivity: 3,
-						limits: {
-							max: 10,
-							min: 0.5
-						}
-					},
-					scales: {
-						xAxes: [{
-							ticks: {
-								min: 'February-16',
-								max: 'June-16'
-							}
-						}]
-					}
-				}
-			});
-		};
-	</script>
+    window.onload = function() {
+      console.log('onload')
+      var ctx = document.getElementById("canvas").getContext("2d");
+      window.myBar = new Chart(ctx, {
+        animation: {
+          duration: 0
+        },
+        type: 'line',
+        data: barChartData,
+        options: {
+          // Elements options apply to all of the options unless overridden in a dataset
+          // In this case, we are setting the border of each bar to be 2px wide and green
+          elements: {
+            rectangle: {
+              borderWidth: 2,
+              borderColor: 'rgb(0, 255, 0)',
+              borderSkipped: 'bottom'
+            }
+          },
+          responsive: true,
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Chart.js Bar Chart'
+          },
+          pan: {
+            enabled: true,
+            mode: 'x' // is panning about the y axis neccessary for bar charts?
+          },
+          zoom: {
+            enabled: true,
+            mode: 'x',
+            sensitivity: 3,
+            limits: {
+              max: 10,
+              min: 0.5
+            }
+          },
+          scales: {
+            xAxes: [{
+	            // type: 'time',
+	            distribution: 'series',
+	            time: {
+	              minUnit: 'day',
+	              min: "2017-11-07T10:06:31.004Z",
+	              max: "2017-11-20T10:06:31.005Z",
+	            }
+	          }]
+          }
+        }
+      });
+    };
+  </script>
 </body>
 
 </html>
