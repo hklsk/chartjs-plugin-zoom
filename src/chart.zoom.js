@@ -43,7 +43,7 @@ function directionEnabled(mode, dir) {
 }
 
 function rangeMaxLimiter(zoomPanOptions, newMax) {
-	if (zoomPanOptions.scaleAxes && zoomPanOptions.rangeMax && zoomPanOptions.rangeMax[zoomPanOptions.scaleAxes]) {
+	if (zoomPanOptions.scaleAxes && zoomPanOptions.rangeMax && zoomPanOptions.rangeMax[zoomPanOptions.scaleAxes] != null) {
 		var rangeMax = zoomPanOptions.rangeMax[zoomPanOptions.scaleAxes];
 		if (newMax > rangeMax) {
 			newMax = rangeMax;
@@ -53,7 +53,7 @@ function rangeMaxLimiter(zoomPanOptions, newMax) {
 }
 
 function rangeMinLimiter(zoomPanOptions, newMin) {
-	if (zoomPanOptions.scaleAxes && zoomPanOptions.rangeMin && zoomPanOptions.rangeMin[zoomPanOptions.scaleAxes]) {
+	if (zoomPanOptions.scaleAxes && zoomPanOptions.rangeMin && zoomPanOptions.rangeMin[zoomPanOptions.scaleAxes] != null) {
 		var rangeMin = zoomPanOptions.rangeMin[zoomPanOptions.scaleAxes];
 		if (newMin < rangeMin) {
 			newMin = rangeMin;
@@ -263,12 +263,26 @@ function positionInChartArea(chartInstance, position) {
 		(position.y >= chartInstance.chartArea.top && position.y <= chartInstance.chartArea.bottom);
 }
 
-function getYAxis(chartInstance) {
+function getXAxis(chartInstance, id) {
 	var scales = chartInstance.scales;
-
+	if ( id !== undefined ) {
+		return scales[id];
+	}
 	for (var scaleId in scales) {
 		var scale = scales[scaleId];
+		if (!scale.isHorizontal()) {
+			return scale;
+		}
+	}
+}
 
+function getYAxis(chartInstance, id) {
+	var scales = chartInstance.scales;
+	if ( id !== undefined ) {
+		return scales[id];
+	}
+	for (var scaleId in scales) {
+		var scale = scales[scaleId];
 		if (!scale.isHorizontal()) {
 			return scale;
 		}
@@ -301,13 +315,13 @@ var zoomPlugin = {
 				var tickOptions = scale.options.ticks;
 
 				if (timeOptions) {
-					delete timeOptions.min;
-					delete timeOptions.max;
+					timeOptions.min = origOptions.time.min;
+					timeOptions.max = origOptions.time.max;
 				}
 
 				if (tickOptions) {
-					delete tickOptions.min;
-					delete tickOptions.max;
+					tickOptions.min = origOptions.ticks.min;
+					tickOptions.max = origOptions.ticks.max;
 				}
 
 				scale.options = helpers.configMerge(scale.options, scale.originalOptions);
@@ -318,6 +332,32 @@ var zoomPlugin = {
 			});
 
 			chartInstance.update();
+		};
+
+		chartInstance.zoomToLimits = function (limits) {
+			var zoomOptions = chartInstance.options.zoom;
+			var limits_x = limits.x,  limits_y = limits.y;
+			var axis, min, max;
+
+			if ( limits_x !== undefined )
+			{
+				axis = getXAxis( chartInstance, limits_x.axis_id );
+				min = limits_x.min === undefined  ? axis.min  : limits_x.min;
+				max = limits_x.max === undefined  ? axis.max  : limits_x.max;
+				axis.options.ticks.min = rangeMinLimiter( zoomOptions, min );
+				axis.options.ticks.max = rangeMaxLimiter( zoomOptions, max );
+			}
+
+			if ( limits_y !== undefined )
+			{
+				axis = getYAxis( chartInstance, limits_y.axis_id );
+				min = limits_y.min === undefined  ? axis.min  : limits_y.min;
+				max = limits_y.max === undefined  ? axis.max  : limits_y.max;
+				axis.options.ticks.min = rangeMinLimiter( zoomOptions, min );
+				axis.options.ticks.max = rangeMaxLimiter( zoomOptions, max );
+			}
+
+			chartInstance.update( 0 );
 		};
 
 	},
